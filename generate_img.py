@@ -1,8 +1,12 @@
 """Generate the Captcha code image"""
+import os,sys
 import cv2
 import numpy as np
 import random
 import string
+import re
+from PIL import ImageFont, ImageDraw, Image
+
 
 def draw_dot():
     canvas = []
@@ -41,11 +45,11 @@ def overlay(pic1, pic2):
 
 
 def gen_char(chars=string.ascii_lowercase + string.digits):
-    #TODO:數字最多占3個
     return ''.join(random.choice(chars) for _ in range(5))
 
 
 def putText(img):
+    """Use opencv to draw text"""
     text = gen_char()
     origin = (10, 23)
     fontFace = cv2.FONT_HERSHEY_SIMPLEX
@@ -54,24 +58,51 @@ def putText(img):
     thickness = 2
     lineType = cv2.LINE_AA
     cv2.putText(img, text, origin, fontFace, fontScale, color, thickness, lineType)
+    return f'{text}.jpg'
+
+
+def putText2(text, folder):
+    """Use PIL(Pillow) to draw text"""
+    img = Image.open(f"{folder}/{text}.jpg")
+    # font_type = ImageFont.load_default()
+    font_type = 'Arial.ttf'
+    font_size = 25
+    origin = (5, 2.5) # (x, y)
+    font = ImageFont.truetype(font_type, font_size, encoding='utf-8')
+    draw = ImageDraw.Draw(img)
+    draw.text(origin, text, font=font, fill=0)
+    # img.show()
+    img.save(f"{folder}/{text}.jpg")
     return text
 
 
-def main():
+def main(folder):
+    text = gen_char()
+    while re.search('[mw]{4}]', text):
+        text = gen_char()
+        print(text)
+
     # 設定圖片長、寬、顏色(彩色:3、黑白:1)
     img = np.resize(draw_dot(), (30, 90, 1))
     img = draw_lines(img)
-    pic_name = putText(img)
-    cv2.imwrite(f'{pic_name}.jpg', img)
+    # pic_name = putText(img)
+    pic_name = f'{folder}/{text}.jpg'
+    cv2.imwrite(pic_name, img)
+    putText2(text, folder)
 
 
 
 
 if __name__ == "__main__":
-    main()
+    loop_time = int(sys.argv[1])
+    folder = "captcha_data"
+    os.makedirs(f'./{folder}', exist_ok=True)
+    for _ in range(loop_time):
+        main(folder)
 
     # TODO(ok):generate the randomly dot
     # TODO(OK):lower case letters and digits generation
     # TODO(ok): record the verification string
     # TODO(ok):draw lines randomly (line 1~5)
     # TODO:overlay picture
+
