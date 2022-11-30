@@ -100,9 +100,9 @@ if __name__ == "__main__":
     for _ in range(loop_time):
         main(folder)
 
-    # TODO(ok):generate the randomly dot
-    # TODO(OK):lower case letters and digits generation
+    # TODO(ok): generate the randomly dot
+    # TODO(ok): lower case letters and digits generation
     # TODO(ok): record the verification string
-    # TODO(ok):draw lines randomly (line 1~5)
-    # TODO:overlay picture
+    # TODO(ok): draw lines randomly (line 1~5)
+    # TODO: overlay picture
 
