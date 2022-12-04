@@ -78,7 +78,8 @@ def putText2(text, folder):
 
 def main(folder):
     text = gen_char()
-    while re.search('[mw]{4}]', text):
+    # m或w出現三次以上會超出圖片邊界
+    while re.search('[m]|[w]{3,}]', text):
         text = gen_char()
         print(text)
 
