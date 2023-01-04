@@ -47,7 +47,7 @@ def putText2(text, folder):
 def main(folder):
     text = gen_char()
     # 讓m或w不同時出現，否則會超出圖片邊界
-    while re.search('[w]|[m]{2,}]', text):
+    while re.search('[w]|[m]{2,}', text):
         text = gen_char()
         print(text)
 
